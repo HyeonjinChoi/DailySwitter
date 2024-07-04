@@ -107,6 +107,12 @@ public class PostService {
 		return postRepository.findByUserInOrderByCreatedAtDesc(follows, pageable).map(this::convertToDto);
 	}
 
+	@Transactional(readOnly = true)
+	public Page<PostResponseDto> getLikedPosts(User user, Pageable pageable) {
+		return postRepository.findLikedPostsByUser(user, pageable).map(this::convertToDto);
+	}
+
+
 	@Transactional
 	public PostResponseDto togglePinPost(Long postId) {
 		Post post = postRepository.findById(postId).orElseThrow(

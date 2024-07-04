@@ -80,4 +80,11 @@ public class PostController {
 		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
 		return postService.getFollowedPosts(userDetails.getUser(), pageable);
 	}
+
+	@GetMapping("/liked")
+	public Page<PostResponseDto> getLikedPosts(@RequestParam(defaultValue = "0") int page,
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+		return postService.getLikedPosts(userDetails.getUser(), pageable);
+	}
 }
