@@ -2,6 +2,9 @@ package com.sparta.dailyswitter.domain.comment.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sparta.dailyswitter.domain.comment.dto.CommentRequestDto;
@@ -42,6 +46,14 @@ public class CommentController {
 	public ResponseEntity<List<CommentResponseDto>> getComment(@PathVariable Long postId) {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(commentService.getComment(postId));
+	}
+
+	@GetMapping("/comments/liked")
+	public ResponseEntity<Page<CommentResponseDto>> getLikedComments(@RequestParam(defaultValue = "0") int page,
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		Pageable pageable = PageRequest.of(page, 5);
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(commentService.getLikedCommentsByUser(userDetails.getUser(), pageable));
 	}
 
 	@PutMapping("/posts/{postId}/comments/{commentId}")

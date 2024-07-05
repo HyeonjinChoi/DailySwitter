@@ -4,6 +4,8 @@ import static com.sparta.dailyswitter.common.exception.ErrorCode.*;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,6 +61,13 @@ public class CommentService {
 			.map(CommentResponseDto::new)
 			.toList();
 	}
+
+	@Transactional(readOnly = true)
+	public Page<CommentResponseDto> getLikedCommentsByUser(User user, Pageable pageable) {
+		return commentRepository.findLikedCommentsByUser(user, pageable)
+			.map(CommentResponseDto::new);
+	}
+
 
 	@Transactional
 	public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto, User user) {
