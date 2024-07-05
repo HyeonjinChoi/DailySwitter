@@ -6,8 +6,11 @@ import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.sparta.dailyswitter.common.util.Timestamped;
+import com.sparta.dailyswitter.domain.like.commentlike.entity.CommentLike;
+import com.sparta.dailyswitter.domain.like.postlike.entity.PostLike;
 import com.sparta.dailyswitter.domain.user.dto.UserInfoRequestDto;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -18,6 +21,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -79,6 +83,12 @@ public class User extends Timestamped {
 
 	@Column(unique = true)
 	private String naverId;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<PostLike> postLikes = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<CommentLike> commentLikes = new ArrayList<>();
 
 	@ElementCollection
 	@CollectionTable(name = "password_history", joinColumns = @JoinColumn(name = "user_id"))
